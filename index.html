@@ -7,14 +7,13 @@
 </head>
 <body class="">
 <div class="wrapper">
-
     <div class="graphics">
         <img src="https://web-steria.s3.eu-west-2.amazonaws.com/water_treatment_plant.png">
          <div style="size: 22px; color: red; width:200px;height:50px;position: relative; top: -320px; left:780px" id="testdiv" class="testdiv"> Getting temperature... </div>
         <div style="size: 22px; color: red; width:200px;height:50px;position: relative; top: -140px; left:180px" id="testdiv2" class="testdiv2"> Getting temperature... </div>
 
     </div>
-    <script src="https://web-steria.s3.eu-west-2.amazonaws.com/jquery.min.js"></script>
+    <script src="jquery.min.js"></script>
     <script type="text/javascript">
         function doPoll() {
             $.getJSON('https://disruptivesteria.s3.eu-west-2.amazonaws.com/disruptivetest/DT_Temp01.json', function(data) {
