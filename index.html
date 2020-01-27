@@ -92,7 +92,7 @@ body {
                                 "http://ec2-3-8-17-123.eu-west-2.compute.amazonaws.com/",
                                 function(data) {
                                     console.log(data);
-                                    if(data.touched) {
+                                    if(data.touched === "true") {
                                         alert("Touch event!")
                                     }
                                 }).done(function() {
