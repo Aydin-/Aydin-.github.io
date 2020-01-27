@@ -92,13 +92,13 @@ body {
                                 "http://ec2-3-8-17-123.eu-west-2.compute.amazonaws.com/",
                                 function(data) {
                                     console.log(data);
-                                    if(data.touch) {
+                                    if(data.touched) {
                                         alert("Touch event!")
                                     }
                                 }).done(function() {
                             console.log("done");
-                        }).fail(function() {
-                            console.log("error");
+                        }).fail(function(err) {
+                            console.log(err);
                         });
             }
 
@@ -131,7 +131,7 @@ body {
             	}
 
             $(document).ready(function() {
-                setInterval(function(){ doPollTouch(); }, 1500);
+                setInterval(function(){ doPollTouch(); }, 10000);
             });
             //      setInterval(function(){ doPollTemp1(); }, 5000);
             //      setInterval(function(){ doPollTemp2(); }, 5000);
