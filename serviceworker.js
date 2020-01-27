@@ -3,4 +3,5 @@ self.addEventListener("fetch", event => {
   if (url.pathname.startsWith("/test")) {
     event.respondWith(new Response("Hello from worker!"));
   } 
+  
 });

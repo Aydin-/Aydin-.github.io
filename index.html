@@ -87,6 +87,21 @@ body {
                         });
             }
 
+            function doPollTouch() {
+                  $.getJSON(
+                                "http://ec2-3-8-17-123.eu-west-2.compute.amazonaws.com/",
+                                function(data) {
+                                    console.log(data);
+                                    if(data.touch) {
+                                        alert("Touch event!")
+                                    }
+                                }).done(function() {
+                            console.log("done");
+                        }).fail(function() {
+                            console.log("error");
+                        });
+            }
+
             this.onpush = function(event) {
                 console.log(event.data);
             }
@@ -115,7 +130,9 @@ body {
             	  }
             	}
 
-            //  $(document).ready(function() {
+            $(document).ready(function() {
+                setInterval(function(){ doPollTouch(); }, 1500);
+            });
             //      setInterval(function(){ doPollTemp1(); }, 5000);
             //      setInterval(function(){ doPollTemp2(); }, 5000);
             //  });
