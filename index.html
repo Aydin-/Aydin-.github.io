@@ -43,6 +43,15 @@ body {
     left: 780px;
 }
 
+.touched {
+    top: -170px;
+    left: 780px;
+    background-color: rgba(100, 100, 100, .45);
+    border-radius: 5px;
+    border-width: 5px;
+    border-color: orange;
+}
+
 .door {
     top: -420px;
     left: 870px;
@@ -56,6 +65,7 @@ body {
             <div id="tempdiv1" class="sensor temp1">Getting temperature...</div>
             <div id="tempdiv2" class="sensor temp2">Getting temperature...</div>
             <div id="touchdiv" class="sensor touch">Waiting for touch signal...</div>
+            <div id="toucheddiv" class="sensor touched">TOUCH!</div>
             <div id="doordiv" class="sensor door">Waiting for door signal...</div>
         </div>
         <script src="jquery.min.js"></script>
@@ -106,6 +116,7 @@ body {
                 console.log(event.data);
             }
 
+            $( '#toucheddiv' ).hide();
             doPollTemp1();
             doPollTemp2();
             
@@ -117,28 +128,15 @@ body {
             evtSource.onmessage = function(event) { 
                 console.log(event) 
                 console.log(event.data)
+
+                if(event.data === "true") {
+                    $( '#touchdiv' ).hide();
+                    $( '#toucheddiv' ).show();
+                } else {
+                    $( '#touchdiv' ).show();
+                    $( '#toucheddiv' ).hide();
+                }
             }
-
-            evtSource.addEventListener("ping", function(event) {
-                  alert("pinging");
-            });
-
-            function displayNotification() {
-            	  if (Notification.permission == 'granted') {
-            	    navigator.serviceWorker.getRegistration().then(function(reg) {
-            	      var options = {
-            	        body: 'Here is a notification body!',
-            	        icon: 'images/example.png',
-            	        vibrate: [100, 50, 100],
-            	        data: {
-            	          dateOfArrival: Date.now(),
-            	          primaryKey: 1
-            	        }
-            	      };
-            	      reg.showNotification('Hello world!', options);
-            	    });
-            	  }
-            	}
 
             //$(document).ready(function() {
             //    setInterval(function(){ doPollTouch(); }, 10000);
