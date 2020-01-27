@@ -1,89 +1,118 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Steria IOT</title>
-    <meta name="description" content="" />
-    <style>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Steria IOT</title>
+<meta name="description" content="" />
+<style>
+body {
+    background-color: black;
+}
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.sensor {
+    padding: 5px;
+    size: 22px;
+    color: white;
+    width: 200px;
+    height: 50px;
+    position: relative;
+    background-color: rgba(0, 255, 0, .45);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+}
 
 .temp1 {
-    size: 22px; color: red; width:200px;height:50px;position: relative; top: -320px; left:780px;
+    top: -520px;
+    left: 960px;
 }
+
 .temp2 {
-    size: 22px; color: red; width:200px;height:50px;position: relative; top: -140px; left:180px;
+    top: -190px;
+    left: 140px;
+}
+
+.touch {
+    top: -170px;
+    left: 780px;
+}
+
+.door {
+    top: -420px;
+    left: 870px;
 }
 </style>
 </head>
 <body class="">
-<div class="wrapper">
-    <div class="graphics">
-        <img src="water_treatment_plant.png">
-         <div id="testdiv" class="temp1"> Getting temperature... </div>
-        <div id="testdiv2" class="temp2"> Getting temperature... </div>
+    <div class="wrapper">
+        <div class="graphics">
+            <img src="water_treatment_plant.png">
+            <div id="tempdiv1" class="sensor temp1">Getting temperature...</div>
+            <div id="tempdiv2" class="sensor temp2">Getting temperature...</div>
+            <div id="touchdiv" class="sensor touch">Waiting for touch signal...</div>
+            <div id="doordiv" class="sensor door">Waiting for door signal...</div>
+        </div>
+        <script src="jquery.min.js"></script>
+        <script type="text/javascript">
+            function doPollTemp1() {
+                getLatestEventAndUpdateDiv('https://disruptivesteria.s3.eu-west-2.amazonaws.com/DT_Temp01_temperature/latest.json', '#tempdiv1');
+            }
+
+            function doPollTemp2() {
+                 getLatestEventAndUpdateDiv('https://disruptivesteria.s3.eu-west-2.amazonaws.com/DT_Temp02_temperature/latest.json', '#tempdiv2');
+            }
+
+            function getLatestEventAndUpdateDiv(url, divId) {
+                  $.getJSON(
+                                url,
+                                function(data) {
+                                    console.log(data);
+                                    $(divId).empty();
+                                    $(divId)
+                                            .html(
+                                                    "<p>Temperature is: "
+                                                            + data.event.data.temperature.value
+                                                            + "&#8451; </p>");
+
+                                }).done(function() {
+                            console.log("done");
+                        }).fail(function() {
+                            console.log("error");
+                        });
+            }
+
+            this.onpush = function(event) {
+                console.log(event.data);
+            }
+
+            doPollTemp1();
+            doPollTemp2();
+
+            //  $(document).ready(function() {
+            //      setInterval(function(){ doPollTemp1(); }, 5000);
+            //      setInterval(function(){ doPollTemp2(); }, 5000);
+            //  });
+
+            navigator.serviceWorker.register('serviceworker.js').then(
+              function(serviceWorkerRegistration) {
+                  serviceWorkerRegistration.pushManager.subscribe().then(
+                      function(pushSubscription) {
+                          console.log(pushSubscription.subscriptionId);
+                          console.log(pushSubscription.endpoint);
+                      }, function(error) {
+                          console.log(error);
+                      }
+                      );
+              }
+              );
+        </script>
 
     </div>
-    <script src="jquery.min.js"></script>
-    <script type="text/javascript">
-        function doPoll() {
-            $.getJSON('https://disruptivesteria.s3.eu-west-2.amazonaws.com/disruptivetest/DT_Temp01.json', function(data) {
-                console.log(data);
-                $("#testdiv").empty();
-                $("#testdiv").html("<p>Temperature is: "+data.event.data.temperature.value+"</p>");
-
-            }).done(function() {
-                  console.log( "done" );
-                })
-                .fail(function() {
-                  console.log( "error" );
-                });
-        }
-
-        $(document).ready(function() {
-            console.log("setting interval");
-
-            setInterval(function(){ doPoll(); }, 5000);
-        });
-
-         function doPollTemp2() {
-            $.getJSON('https://disruptivesteria.s3.eu-west-2.amazonaws.com/disruptivetest/DT_Temp02.json', function(data) {
-                console.log(data);
-
-                $("#testdiv2").empty();
-                $("#testdiv2").html("<p>Temperature is: "+data.event.data.temperature.value+"</p>");
-
-            }).done(function() {
-                  console.log( "done" );
-                })
-                .fail(function() {
-                  console.log( "error" );
-                });
-        }
-
-       this.onpush = function(event) {
-          console.log(event.data);
-        }
-
-        navigator.serviceWorker.register('serviceworker.js').then(
-            function(serviceWorkerRegistration) {
-                serviceWorkerRegistration.pushManager.subscribe().then(
-                    function(pushSubscription) {
-                        console.log(pushSubscription.subscriptionId);
-                        console.log(pushSubscription.endpoint);
-                    }, function(error) {
-                        console.log(error);
-                    }
-                );
-            }
-        );
-
-        $(document).ready(function() {
-            setInterval(function(){ doPoll(); }, 5000);
-            setInterval(function(){ doPollTemp2(); }, 5000);
-
-        });
-    </script>
-
-</div>
 
 </body>
 </html>
