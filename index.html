@@ -112,7 +112,17 @@ body {
             Notification.requestPermission(function(status) {
                 console.log('Notification permission status:', status);
             });
-            
+
+            const evtSource = new EventSource("http://ec2-3-8-17-123.eu-west-2.compute.amazonaws.com/stream-flux");
+            evtSource.onmessage = function(event) { 
+                console.log(event) 
+                console.log(event.data)
+            }
+
+            evtSource.addEventListener("ping", function(event) {
+                  alert("pinging");
+            });
+
             function displayNotification() {
             	  if (Notification.permission == 'granted') {
             	    navigator.serviceWorker.getRegistration().then(function(reg) {
@@ -130,9 +140,9 @@ body {
             	  }
             	}
 
-            $(document).ready(function() {
-                setInterval(function(){ doPollTouch(); }, 10000);
-            });
+            //$(document).ready(function() {
+            //    setInterval(function(){ doPollTouch(); }, 10000);
+            //});
             //      setInterval(function(){ doPollTemp1(); }, 5000);
             //      setInterval(function(){ doPollTemp2(); }, 5000);
             //  });
