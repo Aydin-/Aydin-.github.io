@@ -119,10 +119,6 @@ body {
             $( '#toucheddiv' ).hide();
             doPollTemp1();
             doPollTemp2();
-            
-            Notification.requestPermission(function(status) {
-                console.log('Notification permission status:', status);
-            });
 
             const evtSource = new EventSource("http://ec2-3-8-17-123.eu-west-2.compute.amazonaws.com/stream-flux");
             evtSource.onmessage = function(event) { 
@@ -168,18 +164,6 @@ body {
             //      setInterval(function(){ doPollTemp2(); }, 5000);
             //  });
 
-            navigator.serviceWorker.register('serviceworker.js').then(
-              function(serviceWorkerRegistration) {
-                  serviceWorkerRegistration.pushManager.subscribe().then(
-                      function(pushSubscription) {
-                          console.log(pushSubscription.subscriptionId);
-                          console.log(pushSubscription.endpoint);
-                      }, function(error) {
-                          console.log(error);
-                      }
-                      );
-              }
-              );
         </script>
 
     </div>
